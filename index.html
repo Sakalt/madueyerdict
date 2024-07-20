@@ -5,15 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>マジェール語辞書</title>
     <style>
+        @font-face {
+            font-family: 'Madueyer';
+            src: url('Madueyer.ttf') format('truetype');
+        }
         body { font-family: Arial, sans-serif; margin: 20px; }
         .word-list { margin-bottom: 20px; }
         .word-item { cursor: pointer; margin-bottom: 5px; }
         .pagination { margin-top: 20px; }
         .page-link { margin: 0 5px; cursor: pointer; }
+        .toggle-font { margin-bottom: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
     <h1>マジェール語辞書</h1>
+    <div class="toggle-font" onclick="toggleFont()">フォントを変更</div>
     <div>
         <input type="text" id="search-input" placeholder="検索">
         <button onclick="search()">検索</button>
