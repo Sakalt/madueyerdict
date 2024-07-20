@@ -1,6 +1,7 @@
 let dictionaryData;
 let currentPage = 1;
 const itemsPerPage = 20;
+let isFontToggled = false;
 
 window.onload = function() {
     loadDictionaryData();
@@ -65,6 +66,8 @@ function showWordDetails(word) {
         <ul>
             ${word.contents.map(c => `<li>${c.title}: ${c.text}</li>`).join('')}
         </ul>
+        <h3>Pronunciation:</h3>
+        <p>${generatePronunciation(word.entry.form)}</p>
     `;
 }
 
@@ -85,4 +88,56 @@ function renderFilteredWords(filteredWords) {
         wordItem.onclick = () => showWordDetails(word);
         wordListElement.appendChild(wordItem);
     }
+}
+
+function toggleFont() {
+    const wordListElement = document.getElementById('word-list');
+    if (isFontToggled) {
+        wordListElement.style.fontFamily = 'Arial, sans-serif';
+    } else {
+        wordListElement.style.fontFamily = 'Madueyer';
+    }
+    isFontToggled = !isFontToggled;
+}
+
+function generatePronunciation(word) {
+    const pronunciationRules = [
+        { from: "ts", to: "t͡s" },
+        { from: "q", to: "q" },
+        { from: "e", to: "e" },
+        { from: "ei", to: "ɜ" },
+        { from: "ae", to: "ə" },
+        { from: "j", to: "ʒ" },
+        { from: "kh", to: "χ" },
+        { from: "x", to: "ɕ" },
+        { from: "ny", to: "ɳ" },
+        { from: "ng", to: "ŋ" },
+        { from: "my", to: "ɱ" },
+        { from: "hh", to: "ʡ͡ħ" },
+        { from: "qh", to: "q͡χ" },
+        { from: "'", to: "ʔ" },
+        { from: "k", to: "k" },
+        { from: "c", to: "c" },
+        { from: "d", to: "d" },
+        { from: "g", to: "g" },
+        { from: "s", to: "s" },
+        { from: "t", to: "t" },
+        { from: "n", to: "n" },
+        { from: "h", to: "h" },
+        { from: "m", to: "m" },
+        { from: "y", to: "j" },
+        { from: "r", to: "r" },
+        { from: "l", to: "l" },
+        { from: "v", to: "v" },
+        { from: "b", to: "p" },
+        { from: "b", to: "p" },
+        { from: "z", to: "z" }
+    ];
+
+    let pronunciation = word;
+    pronunciationRules.forEach(rule => {
+        pronunciation = pronunciation.replace(new RegExp(rule.from, 'g'), rule.to);
+    });
+
+    return pronunciation;
 }
