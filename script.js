@@ -135,11 +135,8 @@ function generatePronunciation(word) {
     let pronunciation = word;
 
     pronunciationRules.forEach(rule => {
-        // Replace patterns that match the rule's 'from' value with its 'to' value
         pronunciation = pronunciation.replace(new RegExp(rule.from, 'g'), rule.to);
     });
 
     return pronunciation;
-}
-
 }
