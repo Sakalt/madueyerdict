@@ -130,6 +130,14 @@
                 <ul>
                     ${word.contents.map(c => `<li>${c.title}: ${c.text}</li>`).join('')}
                 </ul>
+                <h3>Variations:</h3>
+                <ul>
+                    ${word.variations.map(v => `<li>${v.title}: ${v.form}</li>`).join('')}
+                </ul>
+                <h3>Relations:</h3>
+                <ul>
+                    ${word.relations.map(r => `<li>${r.title}: ${r.entry.form}</li>`).join('')}
+                </ul>
             `;
         }
 
