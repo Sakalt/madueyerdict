@@ -21,16 +21,25 @@ function renderWordList() {
     const wordListElement = document.getElementById('word-list');
     wordListElement.innerHTML = '';
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, dictionaryData.length);
-    
-    for (let i = startIndex; i < endIndex; i++) {
-        const word = dictionaryData[i];
-        const wordItem = document.createElement('div');
-        wordItem.className = 'word-item';
-        wordItem.textContent = word.entry.form;
-        wordItem.onclick = () => showWordDetails(word);
-        wordListElement.appendChild(wordItem);
+    unction renderPagination() {
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    const totalPages = Math.ceil(dictionaryData.length / itemsPerPage);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageLink = document.createElement('span');
+        pageLink.className = 'page-link';
+        pageLink.textContent = i;
+        if (i === currentPage) {
+            pageLink.classList.add('current-page');
+        }
+        pageLink.onclick = () => {
+            currentPage = i;
+            renderWordList();
+            renderPagination();
+        };
+        paginationElement.appendChild(pageLink);
     }
 }
 
