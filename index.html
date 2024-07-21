@@ -15,6 +15,25 @@
         .pagination { margin-top: 20px; }
         .page-link { margin: 0 5px; cursor: pointer; }
         .toggle-font { margin-bottom: 20px; cursor: pointer; }
+
+        .page-link {
+   　　　　　　 display: inline-block;
+  　　　　　　  padding: 5px 10px;
+   　　　　　　 margin: 2px;
+   　　　　　　 border: 1px solid #ccc;
+    　　　　　　background-color: #a4a4a4; /* Default button color */
+   　　　　　　 color: white;
+   　　　　　　 text-decoration: none;
+    　　　　　　cursor: pointer;
+　　　　　　　　　　　}
+
+　　　　　　　　.page-link:hover {
+   　　　　　　　　　　 background-color: #888; /* Darker color on hover */
+　　　　　　　　　　　　　　　　　}
+
+　　　　　　　.page-link.current-page {
+   　　　　　　　　　　background-color: red; /* Highlight current page */
+　　　　　　　　　　　　　　　　　　　　}
     </style>
 </head>
 <body>
