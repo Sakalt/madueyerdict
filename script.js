@@ -92,14 +92,12 @@ function renderFilteredWords(filteredWords) {
 
 function toggleFont() {
     const wordListElement = document.getElementById('word-list');
-    if (isFontToggled) {
-        wordListElement.style.fontFamily = 'Arial, sans-serif';
+    if (wordListElement.style.fontFamily === 'Madueyer') {
+        wordListElement.style.fontFamily = 'Arial'; // Or your default font
     } else {
         wordListElement.style.fontFamily = 'Madueyer';
     }
-    isFontToggled = !isFontToggled;
 }
-
 function generatePronunciation(word) {
     const pronunciationRules = [
         { from: "ts", to: "t͡s" },
