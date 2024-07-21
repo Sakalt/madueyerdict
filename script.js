@@ -116,28 +116,30 @@ function generatePronunciation(word) {
         { from: "hh", to: "ʡ͡ħ" },
         { from: "qh", to: "q͡χ" },
         { from: "'", to: "ʔ" },
-        { from: "k", to: "k" },
-        { from: "c", to: "c" },
-        { from: "d", to: "d" },
-        { from: "g", to: "g" },
-        { from: "s", to: "s" },
-        { from: "t", to: "t" },
-        { from: "n", to: "n" },
-        { from: "h", to: "h" },
-        { from: "m", to: "m" },
-        { from: "y", to: "j" },
-        { from: "r", to: "r" },
+
+        // New complex rules
+        { from: "a", to: "ɑ" },
+        { from: "ou", to: "ʊ" },
+        { from: "oo", to: "uː" },
+        { from: "i", to: "ɪ" },
+        { from: "u", to: "ʌ" },
+        { from: "ch", to: "tʃ" },
+        { from: "sh", to: "ʃ" },
+        { from: "th", to: "θ" },
+        { from: "dh", to: "ð" },
+        { from: "r", to: "ɹ" },
         { from: "l", to: "l" },
-        { from: "v", to: "v" },
-        { from: "b", to: "p" },
-        { from: "b", to: "p" },
-        { from: "z", to: "z" }
+        { from: "w", to: "w" }
     ];
 
     let pronunciation = word;
+
     pronunciationRules.forEach(rule => {
+        // Replace patterns that match the rule's 'from' value with its 'to' value
         pronunciation = pronunciation.replace(new RegExp(rule.from, 'g'), rule.to);
     });
 
     return pronunciation;
+}
+
 }
