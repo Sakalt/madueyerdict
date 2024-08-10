@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サカルチDictionary</title>
+    <style>
+      }
+      #word-list {
+        font-family: sans-serif;
+      }
+      body {
+        font-family: sans-serif;
+      }
+      #container {
+        width: 80%;
+        margin: 0 auto;
+      }
+      #word-list {
+        margin-bottom: 20px;
+      }
+      .word-item {
+        padding: 5px;
+        border: 1px solid #ddd;
+        margin-bottom: 5px;
+        cursor: pointer;
+      }
+      #pagination {
+        margin-top: 10px;
+      }
+      .page-link {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 2px;
+        border: 1px solid #ccc;
+        background-color: #a4a4a4; /* デフォルトのボタンカラー */
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .page-link:hover {
+        background-color: #888; /* ホバー時の色 */
+      }
+      .page-link.current-page {
+        background-color: red; /* 現在のページをハイライト */
+      }
+      #word-details {
+        margin-top: 20px;
+      }
+      button {
+        margin-bottom: 10px;
+      }
+    </style>
+    <script>
+        let dictionaryData;
+        let currentPage = 1;
+        const itemsPerPage = 20;
+        const defaultFont = 'Arial, sans-serif';
+        const madueyerFont = 'Madueyer, sans-serif';
+
+        window.onload = function() {
+            loadDictionaryData();
+            document.getElementById('toggle-font').onclick = toggleFont;
+        };
+
+        function loadDictionaryData() {
+            fetch('sakalti.json')
+                .then(response => response.json())
+                .then(data => {
+                    dictionaryData = data.words;
+                    renderWordList();
+                    renderPagination();
+                });
+        }
+
+        function renderWordList() {
+            const wordListElement = document.getElementById('word-list');
+            wordListElement.innerHTML = '';
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, dictionaryData.length);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const word = dictionaryData[i];
+                const wordItem = document.createElement('div');
+                wordItem.className = 'word-item';
+                wordItem.textContent = word.entry.form;
+                wordItem.onclick = () => showWordDetails(word);
+                wordListElement.appendChild(wordItem);
+            }
+        }
+
+        function renderPagination() {
+            const paginationElement = document.getElementById('pagination');
+            paginationElement.innerHTML = '';
+
+            const totalPages = Math.ceil(dictionaryData.length / itemsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLink = document.createElement('span');
+                pageLink.className = 'page-link';
+                pageLink.textContent = i;
+                if (i === currentPage) {
+                    pageLink.classList.add('current-page');
+                }
+                pageLink.onclick = () => {
+                    currentPage = i;
+                    renderWordList();
+                    renderPagination();
+                };
+                paginationElement.appendChild(pageLink);
+            }
+        }
+
+        function showWordDetails(word) {
+            const wordDetailsElement = document.getElementById('word-details');
+            const pronunciation = convertPronunciation(word.entry.form); // 発音変換を適用
+            wordDetailsElement.innerHTML = `
+                <h2>${word.entry.form}</h2>
+                <p>ID: ${word.entry.id}</p>
+                <p>発音: ${pronunciation}</p> <!-- 発音情報を追加 -->
+                <h3>Translations:</h3>
+                <ul>
+                    ${word.translations.map(t => `<li>${t.title}: ${t.forms.join(', ')}</li>`).join('')}
+                </ul>
+                <h3>Contents:</h3>
+                <ul>
+                    ${word.contents.map(c => `<li>${c.title}: ${c.text}</li>`).join('')}
+                </ul>
+                <h3>Variations:</h3>
+                <ul>
+                    ${word.variations.map(v => `<li>${v.title}: ${v.form}</li>`).join('')}
+                </ul>
+                <h3>Relations:</h3>
+                <ul>
+                    ${word.relations.map(r => `<li>${r.title}: ${r.entry.form}</li>`).join('')}
+                </ul>
+            `;
+        }
+
+        function search() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const filteredWords = dictionaryData.filter(word => word.entry.form.toLowerCase().includes(searchInput));
+            renderFilteredWords(filteredWords);
+        }
+
+        function renderFilteredWords(filteredWords) {
+            const wordListElement = document.getElementById('word-list');
+            wordListElement.innerHTML = '';
+
+            for (let word of filteredWords) {
+                const wordItem = document.createElement('div');
+                wordItem.className = 'word-item';
+                wordItem.textContent = word.entry.form;
+                wordItem.onclick = () => showWordDetails(word);
+                wordListElement.appendChild(wordItem);
+            }
+        }
+
+        function toggleFont() {
+            const currentFont = document.body.style.fontFamily;
+            document.body.style.fontFamily = currentFont === madueyerFont ? defaultFont : madueyerFont;
+        }
+
+        function convertPronunciation(word) {
+            // 発音変換のルールを定義
+            const rules = [
+                { pattern: /q/g, replacement: 'q' },
+                { pattern: /k/g, replacement: 'k' },
+                { pattern: /g/g, replacement: 'ɣ' },
+                { pattern: /s/g, replacement: 's' },
+                { pattern: /z/g, replacement: 'z' },
+                { pattern: /t/g, replacement: 't' },
+                { pattern: /d/g, replacement: 'd' },
+                { pattern: /n/g, replacement: 'n' },
+                { pattern: /ny/g, replacement: 'ɳ' },
+                { pattern: /ng/g, replacement: 'ŋ' },
+                { pattern: /h/g, replacement: 'h' },
+                { pattern: /m/g, replacement: 'm' },
+                { pattern: /my/g, replacement: 'ɱ' },
+                { pattern: /ei/g, replacement: 'ɜ' },
+                { pattern: /e/g, replacement: 'ɛ' },
+                { pattern: /ui/g, replacement: 'ɨ' },
+                { pattern: /ea/g, replacement: 'æ' },
+                { pattern: /hh/g, replacement: 'ʡ͡ħ' },
+                { pattern: /'/g, replacement: 'ʔ' },
+                { pattern: /l/g, replacement: 'l' },
+                { pattern: /r/g, replacement: 'ɹ' },
+                { pattern: /ts/g, replacement: 't͡s' },
+                { pattern: /ty/g, replacement: 't͡ʃ' },
+                { pattern: /ch/g, replacement: 't͡ɕ' },
+                { pattern: /th/g, replacement: 'þ' }, 
+                { pattern: /w/g, replacement: 'β' }
+            ];
+
+            // 発音変換
+            let converted = word;
+            for (const rule of rules) {
+                converted = converted.replace(rule.pattern, rule.replacement);
+            }
+            return converted;
+        }
+    </script>
+</head>
+<body>
+    <div id="container">
+        <input type="text" id="search-input" placeholder="検索..." oninput="search()">
+        <div id="word-list"></div>
+        <div id="pagination"></div>
+        <div id="word-details"></div>
+    </div>
+</body>
+</html>
